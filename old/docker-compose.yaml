@@ -22,17 +22,6 @@ services:
       indexer-db:
         condition: service_healthy
 
-  feed-value-provider:
-    container_name: ${COMPOSE_PROJECT_NAME}-feed-value-provider
-    image: ghcr.io/flare-foundation/ftso-scaling:latest
-    env_file:
-      - ./mounts/scaling/.env
-    command: "node dist/apps/example_provider/apps/example_provider/src/main.js"
-    ports:
-      - "3101:3101"
-    depends_on:
-      - indexer
-
   data-provider:
     container_name: ${COMPOSE_PROJECT_NAME}-data-provider
     image: ghcr.io/flare-foundation/ftso-scaling:latest
@@ -40,7 +29,7 @@ services:
       - ./mounts/scaling/.env
     command: "node dist/apps/ftso-data-provider/apps/ftso-data-provider/src/main.js"
     depends_on:
-      - feed-value-provider
+      - indexer
 
   client:
     container_name: ${COMPOSE_PROJECT_NAME}-client

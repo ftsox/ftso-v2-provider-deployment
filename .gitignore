@@ -5,3 +5,7 @@ build/
 mounts/
 
 .env
+
+scratch/
+
+coston_account_keys.json

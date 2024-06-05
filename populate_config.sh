@@ -70,7 +70,10 @@ write_ftso_scaling_config() {
 }
 
 main() {
-    source <(grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g')
+    ## original for Linux
+    # source <(grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g')
+    ## fix for Mac
+    tmpfile=$(mktemp) && grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g' > "$tmpfile" && source "$tmpfile" && rm "$tmpfile"
 
     if [ -d "mounts" ] || [ -f "mounts" ]; then
         echo "cleaning configs from previous runs:"
