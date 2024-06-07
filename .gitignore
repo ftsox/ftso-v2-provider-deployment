@@ -5,3 +5,7 @@ build/
 mounts/
 
 .env
+
+# MCZ adds
+coston_account_keys.json
+scratch
