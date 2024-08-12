@@ -32,13 +32,13 @@ Additionally, once in a reward epoch the **System Client** triggers voter regist
 
 Note: Account registration is required for FTSOv2 participation and must be done before starting any further deployment steps.
 
-Each data provider in the FTSOv2 system must set up and register the following 5 accounts:
+Each data provider in the FTSOv2 system must set up and register the following 5 (distinct) accounts:
 
 - `Identity`. Main identity account of the voter. On mainnets this should be held in cold storage, it's required for initial data provider setup but not used during each round on voting.
 - `Submit`. Used for sending commit and reveal transactions.
 - `SubmitSignatures`. Used for sending voting round result signature transactions. (To avoid nonce conflicts, **System Client** uses multiple accounts for submitting transactions).
 - `SigningPolicy`. Used for signature generation during the voting round, and reward epoch signing policy signing (it's a system protocol ran once during reward epoch to establish reward epoch settings, including valid voters and their weights).
-- `Delegation`. Account to which community should delegate funds (using WNat contract) to increase the vote power of the voter (identity/entity) - and also to later get the rewards. If not set, the identity account will be used.
+- `Delegation`. Account to which community should delegate funds (using WNat contract) to increase the vote power of the voter (identity/entity) - and also to later get the rewards.
 
 Accounts need to be funded for gas fees. The delegation account is used of establishing voter power, which can be achieved by wrapping funds directly or by delegation from other accounts. Wrapping can be done via the [development portal](https://governance.dev.aflabs.org/) (make sure to pick the correct network for testnets and via [portal](https://portal.flare.network) for mainnets. 
 
@@ -83,7 +83,7 @@ Instructions for the Hardhat deployment task:
     "delegation": {
       "address": "0x95288e962ff1893ef6c32ad4143fffb12e1eb15f",
       "privateKey": "<private key hex>"
-    }
+    },
     "sortitionPrivateKey": "<private key hex>"
   }
 ]
@@ -119,7 +119,24 @@ yarn hardhat --network songbird register-entities
 
 # if coston2
 yarn hardhat --network coston2 register-entities
+yarn hardhat --network coston2 register-public-keys
 ```
+
+In case of Songbird, you should register your public sortition key manually. First generate a verification of
+your sortition key aka. the signature of the identity address
+
+```
+docker run --rm ghcr.io/flare-foundation/fast-updates/go-client:latest keygen --key "<sortitionPrivateKey in hex>" --address "<identity address in hex>"
+```
+
+At this point you should have the following information:
+- Sortition public key parts X and Y (obtained when generating the sortition key, see [here](https://github.com/flare-foundation/fast-updates/tree/main/go-client)
+on how to obtain public key out of the private one)
+- Verification obtained in the last step
+
+Using the `EntityManager` smart contract, which can be accessed [here](https://songbird-explorer.flare.network/address/0x46C417D0760198E94fee455CE0e223262a3D0049/write-contract#address-tabs),
+call the function `registerPublicKey` with input `(sortitionPubKeyX, sortitionPubKeyY, verificationData)` from the identity address.
+Note that the registration will only take effect in the next reward epoch, and you won't be able to submit updates until then.
 
 ## Install dependencies and setup .env
 
