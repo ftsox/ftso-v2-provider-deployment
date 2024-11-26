@@ -2,7 +2,10 @@
 
 set -eu
 
-source <(grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g')
+## original for Linux
+# source <(grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g')
+## fix for Mac
+tmpfile=$(mktemp) && grep -v '^#' "./.env" | sed -E 's|^(.+)=(.*)$|: ${\1=\2}; export \1|g' > "$tmpfile" && source "$tmpfile" && rm "$tmpfile"
 
 declare -A NODES=( 
     ["flare"]="https://flare-api.flare.network/ext/C/rpc"
