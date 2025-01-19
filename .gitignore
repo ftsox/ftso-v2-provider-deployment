@@ -10,3 +10,4 @@ mounts/
 coston_account_keys.json
 scratch
 .env_*
+sortition_key*

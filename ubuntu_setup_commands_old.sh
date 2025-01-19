@@ -66,7 +66,13 @@ sudo docker compose up -d
 sudo docker compose ps  # should show 4 containers running, one for each in docker-compose.yml
 sudo docker compose ls
 sudo docker compose logs
-sudo docker logs ftso-v2-deployment-client
+sudo docker logs ftso-v2-deployment-client 
+# sudo docker compose logs --follow --tail 100 flare-systems-deployment-ftso-client-1
+# sudo docker logs --follow --tail 100 flare-systems-deployment-ftso-client-1
+  # flare-systems-deployment-system-client-1
+  # flare-systems-deployment-feed-value-provider-1
+  # flare-systems-deployment-ftso-client-1
+  # flare-systems-deployment-c-chain-indexer-1
 sudo docker system df
 sudo docker volume ls
 # sudo docker compose down
